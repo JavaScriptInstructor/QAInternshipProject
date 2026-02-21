@@ -87,5 +87,3 @@ driver.find_element(By.CSS_SELECTOR,".new-market-h1")
 
 #Click on Developer button
 driver.find_element(By.CSS_SELECTOR,"[wized ='servicesOffersFilterDeveloper']").click()
-
-
