@@ -4,22 +4,38 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver import Firefox
 from selenium.webdriver.firefox.service import Service
+from selenium.webdriver.firefox.options import Options
 from app.application import Application
+from selenium.webdriver.firefox.service import Service as FirefoxService
+from webdriver_manager.firefox import GeckoDriverManager
 
 def browser_init(context):
     """
     :param context: Behave context
     """
 
-    driver_path = ChromeDriverManager().install()
-    service = Service(driver_path)
-    context.driver = webdriver.Chrome(service=service)
+    #driver_path = ChromeDriverManager().install()
+    #service = Service(driver_path)
+    #context.driver = webdriver.Chrome(service=service)
+
+    #driver_path = GeckoDriverManager().install()
+    driver = webdriver.Firefox()
+    service = FirefoxService(executable_path=GeckoDriverManager().install())
+
+    # Initialize the Firefox driver
+    context.driver = webdriver.Firefox(service=service)
 
     context.driver.maximize_window()
     context.driver.implicitly_wait(4)
     context.driver.wait = WebDriverWait(context.driver, timeout=10)
     context.app = Application(context.driver)
 
+def before_all(context):
+    try:
+        context.driver = webdriver.Firefox()
+    except Exception as e:
+        print(f"Error starting Firefox driver: {e}")
+        context.driver.maximize_window()
 
 def before_scenario(context, scenario):
     print('\nStarted scenario: ', scenario.name)

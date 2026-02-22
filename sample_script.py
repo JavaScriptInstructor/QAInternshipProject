@@ -3,14 +3,64 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from time import sleep
+from selenium.webdriver.chrome.options import Options
+
+##Firefox
+
+from selenium.webdriver.firefox.service import Service
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium import webdriver
+from selenium.webdriver.firefox.service import Service as FirefoxService
+from webdriver_manager.firefox import GeckoDriverManager
+##Firefox
+driver_path = GeckoDriverManager().install()
+
+driver = webdriver.Firefox()
+service = FirefoxService(executable_path=GeckoDriverManager().install())
+
+# Initialize the Firefox driver
+driver = webdriver.Firefox(service=service)
+
+
+# get the path to the ChromeDriver executable
+##driver_path = ChromeDriverManager().install()
+##service = Service(driver_path)
+##driver = webdriver.Chrome(service=service)
+##driver = webdriver.Chrome()
+driver.maximize_window()
+
 #chrome_options = Options()
 #chrome_options.add_argument("--headless=new") # Use "--headless" for older versions
 #driver = webdriver.Chrome(options=chrome_options)
-driver_path = ChromeDriverManager().install()
+
+
+
+
+def run_headless_chrome(url):
+    # Create ChromeOptions object
+    options = Options()
+
+    # Add the headless argument. Use "--headless=new" for modern Chrome versions (109+).
+    # The old "--headless" flag is still supported but less capable.
+    #options.add_argument("--headless=new")
+
+    # Recommended arguments for stability and compatibility
+    options.add_argument("--disable-gpu")  # Temporarily needed for Windows in some cases
+    options.add_argument("--no-sandbox")  # Required when running in containers
+    options.add_argument("--window-size=1920,1080")  # Set a default window size for rendering
+
+    # Initialize the WebDriver
+    # If not using webdriver_manager, ensure the chromedriver is in your system's PATH
+    #driver = webdriver.Chrome(options=options)
+    # or if using webdriver_manager:
+#driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+
+
+###driver_path = ChromeDriverManager().install()
 
 # create a new Chrome browser instance
-service = Service(driver_path)
-driver = webdriver.Chrome(service=service)
+#service = Service(driver_path)
+#driver = webdriver.Chrome(service=service)
 driver.maximize_window()
 
 # open the url
