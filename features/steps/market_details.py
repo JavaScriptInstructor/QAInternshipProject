@@ -8,17 +8,17 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-##from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 
 # get the path to the ChromeDriver executable
-##driver_path = ChromeDriverManager().install()
+driver_path = ChromeDriverManager().install()
 
 # create a new Chrome browser instance
-##service = Service(driver_path)
-##driver = webdriver.Chrome(service=service)
-##driver = webdriver.Chrome()
-###driver.maximize_window()
+service = Service(driver_path)
+driver = webdriver.Chrome(service=service)
+driver = webdriver.Chrome()
+driver.maximize_window()
 
 ##SEARCH_INPUT = (By.NAME, 'q')
 ##SEARCH_SUBMIT = (By.NAME, 'btnK')
@@ -27,9 +27,9 @@ def browser_init(context):
     :param context: Behave context
     """
 
-    #driver_path = ChromeDriverManager().install()
-    #service = Service(driver_path)
-    #context.driver = webdriver.Chrome(service=service)
+    driver_path = ChromeDriverManager().install()
+    service = Service(driver_path)
+    context.driver = webdriver.Chrome(service=service)
 
     #driver_path = GeckoDriverManager().install()
     ##driver = webdriver.Firefox()
@@ -44,21 +44,29 @@ def browser_init(context):
     ##context.app = Application(context.driver)
 
 ### BROWSERSTACK ###
-    # Register for BrowserStack, then grab it from https://www.browserstack.com/accounts/settings
-    bs_user = 'tiffany_rW308c'
-    bs_key = 'ByA69tyS7pbqeHBvziyw'
+#    # Register for BrowserStack, then grab it from https://www.browserstack.com/accounts/settings
+#    bs_user = 'tiffany_rW308c'
+#    bs_key = 'ByA69tyS7pbqeHBvziyw'
 
-    url = f'http://{bs_user}:{bs_key}@hub-cloud.browserstack.com/wd/hub'
-    options = Options()
-    bstack_options = {
-        "os" : "Windows",
-        "osVersion" : "11",
-        "browserVersion" : "latest",
-        'browserName': 'Safari',
-        'sessionName': 'User can open market tab and filter',
-     }
-    options.set_capability('bstack:options', bstack_options)
-    context.driver = webdriver.Remote(command_executor=url, options=options)
+#    url = f'http://{bs_user}:{bs_key}@hub-cloud.browserstack.com/wd/hub'
+#    options = Options()
+#    bstack_options = {
+#        "os" : "Windows",
+#        "osVersion" : "11",
+#        "browserVersion" : "latest",
+#                         'browserName': 'Safari',
+#       'sessionName': 'User can open market tab and filter',
+#     }
+
+#    options.set_capability('bstack:options', bstack_options)
+#    context.driver = webdriver.Remote(command_executor=url, options=options)
+mobile_emulation = {
+   "deviceMetrics": { "width": 360, "height": 640, "pixelRatio": 3.0 },
+   "userAgent": "Mozilla/5.0 (Linux; Android 4.2.1; en-us; Nexus 5 Build/JOP40D) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Mobile Safari/535.19",
+   "clientHints": {"platform": "Android", "mobile": True} }
+chrome_options = Options()
+chrome_options.add_experimental_option("mobileEmulation", mobile_emulation)
+driver = webdriver.Chrome(options = chrome_options)
 
 @given('Open Reelly page')
 def open_reelly(context):
@@ -125,3 +133,5 @@ driver.find_element(By.CSS_SELECTOR,".new-market-h1")
 
 #Click on Developer button
 driver.find_element(By.CSS_SELECTOR,"[wized ='servicesOffersFilterDeveloper']").click()
+
+context.driver.quit()
